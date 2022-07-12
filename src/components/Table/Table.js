@@ -28,7 +28,7 @@ const Table = ({data}) => {
   };
 
   const actionsEvent = (e) => { 
-    console.log('jkkk', e);
+    console.log('acciones', e);
   }
 
   const loaderBody = () => {

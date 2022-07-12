@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
 const ModalRole = ({show, handleClose, data}) => {
-  console.log(data);
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>

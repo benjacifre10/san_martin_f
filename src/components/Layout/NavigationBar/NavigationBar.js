@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import lodash from 'lodash';
-
+import decodeToken from '../../../utils/jwt';
 import { useGlobal } from "./../../../context/Global/GlobalProvider";
 
 import styles from './NavigationBar.module.css';
@@ -10,9 +10,13 @@ import ToggleButton from '../SideBar/ToggleButton';
 
 const NavigationBar = ({ toggleClick }) => {
 
+  const [user, setUser] = useState('');
+ 
   const [globalState] = useGlobal();
 
-  const { userLogin } = globalState;
+  useEffect(() => {
+    setUser(decodeToken(document.cookie));
+  }, [globalState]);
 
   return (
     <header className={styles.toolbar}>
@@ -22,7 +26,7 @@ const NavigationBar = ({ toggleClick }) => {
             </div>
             <div className={styles.toolbar__logo}>
                 {
-                  lodash.isEmpty(userLogin) ?
+                  lodash.isEmpty(user) ?
                   <NavLink
                     to="/"
                   >
@@ -46,7 +50,7 @@ const NavigationBar = ({ toggleClick }) => {
             <div className={styles.spacer} />
             <div className={styles.toolbar__navigation_items}>
               {(() => {
-                switch(userLogin.type) {
+                switch(user.type) {
                   case "ALUMNO": return (
                     <ul>
                       <li>

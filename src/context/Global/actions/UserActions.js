@@ -4,8 +4,9 @@ export const login = async (dispatch, item) => {
   const result = await clientAxios.post('/login', item);
   dispatch({
     type: 'LOGIN',
-    payload: result.data.token
+    payload: result.data
   });
+  return result;
 };
 
 export const logout = async (dispatch) => {
