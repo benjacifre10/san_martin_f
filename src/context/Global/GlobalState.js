@@ -1,6 +1,8 @@
 export const GlobalState = {
   degrees: {},
+  professors: {},
   roles: {},
+  studyplans: {},
   pursuetypes: {},
   shifts: {},
   testtypes: {},

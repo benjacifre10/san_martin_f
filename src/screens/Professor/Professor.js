@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import Modal from './Modal/Modal';
+import { Button, Container, Row, Col } from 'react-bootstrap';
+import ModalProfessor from './Modal/ModalProfessor';
 import Table from '../../components/Table/Table';
 import Notification from '../../components/Notification/Notification';
 
 import { useGlobal } from '../../context/Global/GlobalProvider';
-import { getUsersByRole, addUser } from '../../context/Global/actions/UserActions';
+import { getProfessor, addProfessor, deleteProfessor, updateProfessor } from '../../context/Global/actions/ProfessorActions';
 
-import styles from './Users.module.css';
+import styles from './Professor.module.css';
 
-const Users = () => {
+const Professor = () => {
 
   const [globalState, globalDispatch] = useGlobal();
-  const [dataUsers, setDataUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [dataRow, setDataRow] = useState('');
+  const [dataProfessors, setDataProfessors] = useState([]);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setDataUsers(getUsersByRole(globalDispatch));
-  }, []);
-
-  useEffect(() => {
-    setDataUsers(globalState.users);
-  }, [globalState]);
 
   const showError = (message, type) => {
     message ?
@@ -35,6 +27,12 @@ const Users = () => {
       />  
     ) :
     setError(null);
+  };
+
+  const getAllProfessors = async () => {
+    const result = await getProfessor(globalDispatch);
+    setDataProfessors(result);
+    return; 
   };
 
   const buildNotification = (result) => {
@@ -54,30 +52,51 @@ const Users = () => {
     }
   };
 
+  useEffect(() => {
+    setDataProfessors(getAllProfessors(globalDispatch));
+  }, []);
+
+  useEffect(() => {
+    setDataProfessors(globalState.professors);
+  }, [globalState]);
+
   const saveEventHandler = async (e) => {
-    const result = await addUser(globalDispatch, e);
+    const result = e.ID === '' ?
+      await addProfessor(globalDispatch, e) :
+      await updateProfessor(globalDispatch, e);
    
     buildNotification(result); 
-    setDataUsers(getUsersByRole(globalDispatch));
+    setDataProfessors(getAllProfessors(globalDispatch));
     setShow(current => !current);
     setDataRow('');
   };
 
-  const addUserEvent = () => {
+  const addProfessorEvent = () => {
     setShow(current => !current);
   };
 
-  const closeUserEvent = () => {
+  const closeProfessorEvent = () => {
     setDataRow('');
     setShow(current => !current);
   };
+
+  const tableEvents = async (e, d) => { 
+    if (e === 'edit') {
+      setDataRow(d);
+      setShow(current => !current);
+    }
+    if (e === 'delete') {
+      const result = await deleteProfessor(globalDispatch, d);
+      buildNotification(result); 
+    }
+  }
 
   return (
     <React.Fragment>
       <Container className={styles.container}>
         { error }
         <Row>
-          <h1>Usuarios</h1>
+          <h1>Profesores</h1>
         </Row>
         <hr />
         <br />
@@ -87,29 +106,29 @@ const Users = () => {
                 className="w-100"
                 variant="primary"
                 size="xs"
-                onClick={() => addUserEvent()}
+                onClick={() => addProfessorEvent()}
               >
                 Agregar
               </Button>
           </Col>
         </Row>
-        <br />
+        <br />  
         <Row>
           <Col xs lg="2"></Col>
           <Col>
             <Table
-              key={'user'}
-              tableEvents={null}
-              data={dataUsers}
-              actions={''}
+              key={'professor'}
+              tableEvents={(e, d) => tableEvents(e, d)}
+              data={dataProfessors}
+              actions={'ed'}
             /> 
           </Col>
           <Col xs lg="2"></Col>
         </Row>
       </Container>
-      <Modal 
+      <ModalProfessor 
         show={show}
-        handleClose={closeUserEvent}
+        handleClose={closeProfessorEvent}
         saveEvent={(e) => saveEventHandler(e)}
         data={dataRow || ''}
       />
@@ -117,4 +136,5 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Professor;
+

@@ -10,10 +10,12 @@ import Degree from './screens/Degree/Degree';
 import Students from './screens/Students/Students';
 import Roles from './screens/Roles/Roles';
 import Shift from './screens/Shift/Shift';
+import StudyPlan from './screens/StudyPlan/StudyPlan';
 import TestType from './screens/TestType/TestType';
 import PursueType from './screens/PursueType/PursueType';
 import PasswordBlank from './screens/PasswordBlank/PasswordBlank';
 import PasswordChange from './screens/PasswordChange/PasswordChange';
+import Professor from './screens/Professor/Professor';
 import Users from './screens/Users/Users';
 import Home from './screens/Home/Home';
 import Layout from './components/Layout/Layout';
@@ -30,10 +32,12 @@ const App = () => {
       <Route exact path="/users" element={<Protected><Users/></Protected>} />
       <Route exact path="/roles" element={<Protected><Roles/></Protected>} />
       <Route exact path="/shift" element={<Protected><Shift/></Protected>} />
+      <Route exact path="/studyplan" element={<Protected><StudyPlan/></Protected>} />
       <Route exact path="/testtype" element={<Protected><TestType/></Protected>} />
       <Route exact path="/pursuetype" element={<Protected><PursueType/></Protected>} />
       <Route exact path="/passwordblank" element={<Protected><PasswordBlank/></Protected>} />
       <Route exact path="/passwordchange" element={<Protected><PasswordChange/></Protected>} />
+      <Route exact path="/professor" element={<Protected><Professor/></Protected>} />
       <Route exact path="/students" element={<Protected><Students/></Protected>} />
       <Route exact path="/degree" element={<Protected><Degree/></Protected>} />
     </Routes>

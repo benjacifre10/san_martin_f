@@ -61,6 +61,20 @@ const SideBar = ({ show, click }) => {
               <li>
                 <NavLink
                   className={styles.side_bar__link}
+                  to="/professor">
+                  Profesores
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                  to="/studyplan">
+                  Plan de Estudio
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={styles.side_bar__link}
                   to="/passwordchange">
                   Cambiar Password
                 </NavLink>

@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
-import Modal from './Modal/Modal';
+import { Button, Container, Row, Col } from 'react-bootstrap';
+import ModalStudyPlan from './Modal/ModalStudyPlan';
 import Table from '../../components/Table/Table';
 import Notification from '../../components/Notification/Notification';
 
 import { useGlobal } from '../../context/Global/GlobalProvider';
-import { getUsersByRole, addUser } from '../../context/Global/actions/UserActions';
+import { getStudyPlan, addStudyPlan, changeStateStudyPlan, updateStudyPlan } from '../../context/Global/actions/StudyPlanActions';
 
-import styles from './Users.module.css';
+import styles from './StudyPlan.module.css';
 
-const Users = () => {
+const StudyPlan = () => {
 
   const [globalState, globalDispatch] = useGlobal();
-  const [dataUsers, setDataUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [dataRow, setDataRow] = useState('');
+  const [dataStudyPlans, setDataStudyPlans] = useState([]);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setDataUsers(getUsersByRole(globalDispatch));
-  }, []);
-
-  useEffect(() => {
-    setDataUsers(globalState.users);
-  }, [globalState]);
 
   const showError = (message, type) => {
     message ?
@@ -35,6 +27,12 @@ const Users = () => {
       />  
     ) :
     setError(null);
+  };
+
+  const getAllStudyPlans = async () => {
+    const result = await getStudyPlan(globalDispatch);
+    setDataStudyPlans(result);
+    return; 
   };
 
   const buildNotification = (result) => {
@@ -54,30 +52,52 @@ const Users = () => {
     }
   };
 
+  useEffect(() => {
+    setDataStudyPlans(getAllStudyPlans(globalDispatch));
+  }, []);
+
+  useEffect(() => {
+    setDataStudyPlans(globalState.studyplans);
+  }, [globalState]);
+
   const saveEventHandler = async (e) => {
-    const result = await addUser(globalDispatch, e);
+    const result = e.ID === '' ?
+      await addStudyPlan(globalDispatch, e) :
+      await updateStudyPlan(globalDispatch, e);
    
     buildNotification(result); 
-    setDataUsers(getUsersByRole(globalDispatch));
+    setDataStudyPlans(getAllStudyPlans(globalDispatch));
     setShow(current => !current);
     setDataRow('');
   };
 
-  const addUserEvent = () => {
+  const addStudyPlanEvent = () => {
     setShow(current => !current);
   };
 
-  const closeUserEvent = () => {
+  const closeStudyPlanEvent = () => {
     setDataRow('');
     setShow(current => !current);
   };
+
+  const tableEvents = async (e, d) => { 
+    if (e === 'edit') {
+      setDataRow(d);
+      setShow(current => !current);
+    }
+    if (e === 'check') {
+      d.state = !d.state;
+      const result = await changeStateStudyPlan(globalDispatch, d);
+      buildNotification(result); 
+    }
+  }
 
   return (
     <React.Fragment>
       <Container className={styles.container}>
         { error }
         <Row>
-          <h1>Usuarios</h1>
+          <h1>Planes de Estudio</h1>
         </Row>
         <hr />
         <br />
@@ -87,29 +107,29 @@ const Users = () => {
                 className="w-100"
                 variant="primary"
                 size="xs"
-                onClick={() => addUserEvent()}
+                onClick={() => addStudyPlanEvent()}
               >
                 Agregar
               </Button>
           </Col>
         </Row>
-        <br />
+        <br />  
         <Row>
           <Col xs lg="2"></Col>
           <Col>
             <Table
-              key={'user'}
-              tableEvents={null}
-              data={dataUsers}
-              actions={''}
+              key={'studyplan'}
+              tableEvents={(e, d) => tableEvents(e, d)}
+              data={dataStudyPlans}
+              actions={'ec'}
             /> 
           </Col>
           <Col xs lg="2"></Col>
         </Row>
       </Container>
-      <Modal 
+      <ModalStudyPlan 
         show={show}
-        handleClose={closeUserEvent}
+        handleClose={closeStudyPlanEvent}
         saveEvent={(e) => saveEventHandler(e)}
         data={dataRow || ''}
       />
@@ -117,4 +137,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default StudyPlan;
