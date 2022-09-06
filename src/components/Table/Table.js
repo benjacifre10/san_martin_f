@@ -47,9 +47,25 @@ const Table = ({data, tableEvents, actions}) => {
     const values = dataTable.map((d, i) => {
       return <Row key={i}>
         {Object.values(d).map((x, j) => {
+          console.log(typeof x, x);
+          let dataColumn;
+          switch (typeof x) {
+            case "boolean":
+              dataColumn = x ? 'Activo' : 'Inactivo';
+              break;
+            case "string":
+              dataColumn = x;
+              break;
+            case "object":
+              dataColumn = x.join(" ");
+              break;
+            default:
+              dataColumn = x;
+              break;
+          }
           return <BodyCol 
             key={j} 
-            data={typeof x === "boolean" ? x === true ? 'Activo' : 'Inactivo' : x}
+            data={dataColumn}
             colNumber={j} 
             actions={actions}
           />

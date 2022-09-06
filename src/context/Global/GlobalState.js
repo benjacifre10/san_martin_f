@@ -1,13 +1,14 @@
 export const GlobalState = {
   degrees: {},
   professors: {},
-  roles: {},
-  studyplans: {},
   pursuetypes: {},
+  roles: {},
   shifts: {},
+  studyplans: {},
+  subjects: {},
   testtypes: {},
-  users: {},
   userLogin: {},
+  users: {},
   loading: false,
   error: false,
   message: ""

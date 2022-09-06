@@ -59,8 +59,9 @@ export const deleteProfessor = async (dispatch, item) => {
 };
 
 export const getProfessor = async (dispatch) => {
-  
+
   const access_token = document.cookie.replace("token=", "");
+  if (!access_token) return;
   const result = await clientAxios.get('/professor', {
     headers: {
       'Authorization': `Bearer${access_token}`

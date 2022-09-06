@@ -1,4 +1,5 @@
 import React, { useContext, useReducer } from 'react';
+
 import { GlobalContext } from './GlobalContext';
 import  combineReducers from './reducers';
 import  DegreeReducer from './reducers/DegreeReducer';
@@ -7,6 +8,7 @@ import  PursueTypeReducer from './reducers/PursueTypeReducer';
 import  RoleReducer from './reducers/RoleReducer';
 import  ShiftReducer from './reducers/ShiftReducer';
 import  StudyPlanReducer from './reducers/StudyPlanReducer';
+import  SubjectReducer from './reducers/SubjectReducer';
 import  TestTypeReducer from './reducers/TestTypeReducer';
 import  UserReducer  from './reducers/UserReducer';
 import { GlobalState } from './GlobalState';
@@ -25,6 +27,7 @@ export const GlobalProvider = ({ children }) => {
     roles: RoleReducer,
     shifts: ShiftReducer,
     studyplans: StudyPlanReducer,
+    subjects: SubjectReducer,
     testtypes: TestTypeReducer,
     users: UserReducer,
   });
