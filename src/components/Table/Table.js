@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import lodash from 'lodash';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import HeaderCol from './HeaderCol';
 import BodyCol from './BodyCol';
@@ -47,7 +49,6 @@ const Table = ({data, tableEvents, actions}) => {
     const values = dataTable.map((d, i) => {
       return <Row key={i}>
         {Object.values(d).map((x, j) => {
-          console.log(typeof x, x);
           let dataColumn;
           switch (typeof x) {
             case "boolean":
@@ -57,7 +58,10 @@ const Table = ({data, tableEvents, actions}) => {
               dataColumn = x;
               break;
             case "object":
-              dataColumn = x.join(" ");
+              if (Array.isArray(x)) dataColumn = x.join(" ");
+              else {
+                dataColumn = <FontAwesomeIcon onClick={() => tableEvents('search', x)} icon={faPlusCircle}/>
+              }
               break;
             default:
               dataColumn = x;

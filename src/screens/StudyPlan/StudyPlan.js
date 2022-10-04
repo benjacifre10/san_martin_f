@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 import ModalStudyPlan from './Modal/ModalStudyPlan';
+import ModalCorrelatives from './Modal/ModalCorrelatives';
 import Table from '../../components/Table/Table';
 import Notification from '../../components/Notification/Notification';
 
 import { useGlobal } from '../../context/Global/GlobalProvider';
 import { getStudyPlan, addStudyPlan, changeStateStudyPlan, updateStudyPlan } from '../../context/Global/actions/StudyPlanActions';
+import { getSubjectsXStudyPlan } from '../../context/Global/actions/SubjectXStudyPlanActions';
+
+import { addPropertyToStudyPlan } from '../../utils/addProperties';
 
 import styles from './StudyPlan.module.css';
 
@@ -13,8 +17,10 @@ const StudyPlan = () => {
 
   const [globalState, globalDispatch] = useGlobal();
   const [show, setShow] = useState(false);
+  const [showCorrelatives, setShowCorrelatives] = useState(false);
   const [dataRow, setDataRow] = useState('');
   const [dataStudyPlans, setDataStudyPlans] = useState([]);
+  const [dataSubjectsXStudyPlans, setDataSubjectsXStudyPlans] = useState([]);
   const [error, setError] = useState(null);
 
   const showError = (message, type) => {
@@ -31,7 +37,10 @@ const StudyPlan = () => {
 
   const getAllStudyPlans = async () => {
     const result = await getStudyPlan(globalDispatch);
-    setDataStudyPlans(result);
+    if (result) {
+      const data = addPropertyToStudyPlan(result);
+      setDataStudyPlans(data);
+    }
     return; 
   };
 
@@ -80,7 +89,20 @@ const StudyPlan = () => {
     setShow(current => !current);
   };
 
+  const addCorrelatives = (d) => {
+    // aca llamo al subjectxplan by studyplanid
+    setDataSubjectsXStudyPlans(getSubjectsXStudyPlan(globalDispatch, d)); 
+    setShowCorrelatives(current => !current);
+  };
+
+  const closeCorrelatives = () => {
+    setShowCorrelatives(current => !current);
+  };
+
   const tableEvents = async (e, d) => { 
+    if (e === 'search') {
+      addCorrelatives(d);
+    }
     if (e === 'edit') {
       setDataRow(d);
       setShow(current => !current);
@@ -132,6 +154,12 @@ const StudyPlan = () => {
         handleClose={closeStudyPlanEvent}
         saveEvent={(e) => saveEventHandler(e)}
         data={dataRow || ''}
+      />
+      <ModalCorrelatives 
+        show={showCorrelatives}
+        handleClose={closeCorrelatives}
+        saveEvent={(e) => saveEventHandler(e)}
+        data={dataSubjectsXStudyPlans || ''}
       />
     </React.Fragment>
   );

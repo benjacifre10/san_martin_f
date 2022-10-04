@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Spinner, Row } from 'react-bootstrap';
 import lodash from 'lodash';
 
 import { useGlobal } from '../../../context/Global/GlobalProvider';
@@ -21,6 +21,8 @@ const FormStudyPlan = ({ dataEntry, saveData }) => {
   const [select, setSelect] = useState(null);
   const [degreeSelect, setDegreeSelect] = useState(null);
 
+  const [emptyData, setEmptyData] = useState(false);
+
   const getAllDegrees = async () => {
     const result = await getDegree(globalDispatch);
     setDataDegrees(result);
@@ -35,6 +37,9 @@ const FormStudyPlan = ({ dataEntry, saveData }) => {
       degree: dataEntry.degree || '',
     }); 
     setDataDegrees(getAllDegrees(globalDispatch));
+    setTimeout(() => {
+      setEmptyData(true);
+    }, 4000);
   }, []);
 
   useEffect(() => {
@@ -88,7 +93,7 @@ const FormStudyPlan = ({ dataEntry, saveData }) => {
   };
 
 
-  if (dataDegrees.length > 0) {
+  if (dataDegrees && dataDegrees.length > 0) {
     degrees = dataDegrees
       .filter(d => d.active === true)
       .map(d => {
@@ -100,31 +105,45 @@ const FormStudyPlan = ({ dataEntry, saveData }) => {
   }
 
   return (
-    <Form onSubmit={sendData}>
-      <Form.Group className="mb-3" controlId="formBasicID">
-        <Form.Control type="hidden" disabled name="ID" value={data ? data.ID : ''}/>
-      </Form.Group>
+    <React.Fragment>
+      <Form onSubmit={sendData}>
+        {
+          lodash.isEmpty(dataDegrees) ?
+          emptyData ? 
+            <Row className="justify-content-center">
+              No hay carreras disponibles!!              
+            </Row> :
+            <Row className="justify-content-center">
+              <Spinner animation="border" variant="primary" /> 
+            </Row> :
+          <React.Fragment>
+            <Form.Group className="mb-3" controlId="formBasicID">
+              <Form.Control type="hidden" disabled name="ID" value={data ? data.ID : ''}/>
+            </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicName">
-        <Form.Label>Nombre</Form.Label>
-        <Form.Control type="text" placeholder="Ingrese nombre" name="name" onChange={handleInputChange} value={data ? data.name : ''} autoFocus />
-      </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicName">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control type="text" placeholder="Ingrese nombre" name="name" onChange={handleInputChange} value={data ? data.name : ''} autoFocus />
+            </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicCode">
-        <Form.Label>Codigo</Form.Label>
-        <Form.Control type="text" placeholder="Ingrese codigo" name="code" onChange={handleInputChange} value={data ? data.code : ''} disabled={dataEntry.ID ? true : false}/>
-      </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicCode">
+              <Form.Label>Codigo</Form.Label>
+              <Form.Control type="text" placeholder="Ingrese codigo" name="code" onChange={handleInputChange} value={data ? data.code : ''} disabled={dataEntry.ID ? true : false}/>
+            </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formBasicDegree">
-        <Form.Label>Carrera</Form.Label>
-        { select }    
-      </Form.Group>
+            <Form.Group className="mb-3" controlId="formBasicDegree">
+              <Form.Label>Carrera</Form.Label>
+              { select }    
+            </Form.Group>
 
-      <br />
-      <Button variant="primary" type="submit" className="w-100">
-        { dataEntry ? 'Actualizar' : 'Guardar' }
-      </Button>
-    </Form>
+            <br />
+            <Button variant="primary" type="submit" className="w-100">
+              { dataEntry ? 'Actualizar' : 'Guardar' }
+            </Button>
+          </React.Fragment>
+        }
+      </Form>
+    </React.Fragment>
   )
 }
 

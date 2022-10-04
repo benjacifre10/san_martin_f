@@ -9,6 +9,7 @@ import  RoleReducer from './reducers/RoleReducer';
 import  ShiftReducer from './reducers/ShiftReducer';
 import  StudyPlanReducer from './reducers/StudyPlanReducer';
 import  SubjectReducer from './reducers/SubjectReducer';
+import  SubjectXStudyPlanReducer from './reducers/SubjectXStudyPlanReducer';
 import  TestTypeReducer from './reducers/TestTypeReducer';
 import  UserReducer  from './reducers/UserReducer';
 import { GlobalState } from './GlobalState';
@@ -28,6 +29,7 @@ export const GlobalProvider = ({ children }) => {
     shifts: ShiftReducer,
     studyplans: StudyPlanReducer,
     subjects: SubjectReducer,
+    subjectsxstudyplan: SubjectXStudyPlanReducer,
     testtypes: TestTypeReducer,
     users: UserReducer,
   });

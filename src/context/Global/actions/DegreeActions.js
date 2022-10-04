@@ -11,7 +11,6 @@ export const addDegree = async (dispatch, item) => {
   const result = await clientAxios.post('/degree', 
     { name: item.name, active: true }, options);
   item.ID = result.data.data || '';
- 
   dispatch({
     type: 'ADD_DEGREE',
     payload: item
@@ -68,10 +67,10 @@ export const getDegree = async (dispatch) => {
       'Authorization': `Bearer${access_token}`
     }
   });
-  
+
   dispatch({
     type: 'GET_DEGREE',
-    payload: result.data.data
+    payload: result.data.data ? result.data.data : []
   });
 
   return result.data.data;

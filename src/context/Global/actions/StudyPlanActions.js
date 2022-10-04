@@ -71,7 +71,7 @@ export const getStudyPlan = async (dispatch) => {
   
   dispatch({
     type: 'GET_STUDY_PLAN',
-    payload: result.data.data
+    payload: result.data.data || []
   });
 
   return result.data.data;

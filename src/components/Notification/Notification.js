@@ -2,12 +2,13 @@ import React from 'react';
 import { Toast, ToastContainer } from 'react-bootstrap';
 
 const Notification = ({message, type, show}) => {
+
   return (
-    <ToastContainer position={'top-end'} >
+    <ToastContainer position={'top-end'} style={{ zIndex: 100 }} >
       <Toast
           className="d-inline-block m-1"
           bg={type}
-          onClose={() => show(null)} delay={3000} autohide
+          onClose={() => show(null)} delay={30000} autohide
         >
           <Toast.Header>
             <strong className="me-auto">{type === 'success' ? 'Ok' : 'Error'}</strong>
