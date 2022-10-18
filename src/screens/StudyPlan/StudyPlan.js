@@ -7,7 +7,8 @@ import Notification from '../../components/Notification/Notification';
 
 import { useGlobal } from '../../context/Global/GlobalProvider';
 import { getStudyPlan, addStudyPlan, changeStateStudyPlan, updateStudyPlan } from '../../context/Global/actions/StudyPlanActions';
-import { getSubjectsXStudyPlan } from '../../context/Global/actions/SubjectXStudyPlanActions';
+import { getSubjectsXStudyPlan, addSubjectsXStudyPlan, deleteSubjectsXStudyPlan } from '../../context/Global/actions/SubjectXStudyPlanActions';
+import { getCorrelative, addCorrelative, deleteCorrelative } from '../../context/Global/actions/CorrelativeActions';
 
 import { addPropertyToStudyPlan } from '../../utils/addProperties';
 
@@ -21,6 +22,7 @@ const StudyPlan = () => {
   const [dataRow, setDataRow] = useState('');
   const [dataStudyPlans, setDataStudyPlans] = useState([]);
   const [dataSubjectsXStudyPlans, setDataSubjectsXStudyPlans] = useState([]);
+  const [dataCorrelatives, setDataCorrelatives] = useState([]);
   const [error, setError] = useState(null);
 
   const showError = (message, type) => {
@@ -80,6 +82,75 @@ const StudyPlan = () => {
     setDataRow('');
   };
 
+  const saveEventCorrelativesHandler = async (e) => {
+   
+    await deleteCorrelative(globalDispatch, e.studyPlanId);
+    await deleteSubjectsXStudyPlan(globalDispatch, e.studyPlanId);
+    // inserto las de primer anio
+    if (e.correlatives.firstYearSubjectData.length > 0) {
+      for (const c of e.correlatives.firstYearSubjectData) {
+        const subjectXStudyPlanData = {
+          StudyPlanId: e.studyPlanId,
+          SubjectId: c.subject.value
+        };
+        const result = await addSubjectsXStudyPlan(globalDispatch, subjectXStudyPlanData);
+        const correlativesData = {
+          year: c.year.value,
+          correlative: c.correlatives ? c.correlatives.map(cor => cor.value) : [],
+          subjectxstudyplanid: result.data
+        };
+        const resultCorrelative = await addCorrelative(globalDispatch, correlativesData);
+        // creo una bandera al principio del metodo y verifico el resultado, si alguno esta mal muestro el cartel
+        // sino muestro el cartel de que esta todo bien
+        buildNotification(resultCorrelative);
+      };
+    }
+    
+    // inserto las de segundo anio
+    if (e.correlatives.secondYearSubjectData.length > 0) {
+      for (const c of e.correlatives.secondYearSubjectData) {
+        const subjectXStudyPlanData = {
+          StudyPlanId: e.studyPlanId,
+          SubjectId: c.subject.value
+        };
+        const result = await addSubjectsXStudyPlan(globalDispatch, subjectXStudyPlanData);
+        const correlativesData = {
+          year: c.year.value,
+          correlative: c.correlatives ? c.correlatives.map(cor => cor.value) : [],
+          subjectxstudyplanid: result.data
+        };
+        const resultCorrelative = await addCorrelative(globalDispatch, correlativesData);
+        // creo una bandera al principio del metodo y verifico el resultado, si alguno esta mal muestro el cartel
+        // sino muestro el cartel de que esta todo bien
+        buildNotification(resultCorrelative);
+      };
+    }
+
+    // inserto las de tercer anio
+    if (e.correlatives.thirdYearSubjectData.length > 0) {
+      for (const c of e.correlatives.thirdYearSubjectData) {
+        const subjectXStudyPlanData = {
+          StudyPlanId: e.studyPlanId,
+          SubjectId: c.subject.value
+        };
+        const result = await addSubjectsXStudyPlan(globalDispatch, subjectXStudyPlanData);
+        const correlativesData = {
+          year: c.year.value,
+          correlative: c.correlatives ? c.correlatives.map(cor => cor.value) : [],
+          subjectxstudyplanid: result.data
+        };
+        const resultCorrelative = await addCorrelative(globalDispatch, correlativesData);
+        // creo una bandera al principio del metodo y verifico el resultado, si alguno esta mal muestro el cartel
+        // sino muestro el cartel de que esta todo bien
+        buildNotification(resultCorrelative);
+      };
+    }
+
+    setShowCorrelatives(current => !current);
+    setDataRow('');
+    setDataSubjectsXStudyPlans([]);
+  };
+
   const addStudyPlanEvent = () => {
     setShow(current => !current);
   };
@@ -89,9 +160,13 @@ const StudyPlan = () => {
     setShow(current => !current);
   };
 
-  const addCorrelatives = (d) => {
+  const addCorrelatives = async (d) => {
+    setDataRow(d);
     // aca llamo al subjectxplan by studyplanid
-    setDataSubjectsXStudyPlans(getSubjectsXStudyPlan(globalDispatch, d)); 
+    const subjectsxstudyplanResult = await getSubjectsXStudyPlan(globalDispatch, d);
+    setDataSubjectsXStudyPlans(subjectsxstudyplanResult); 
+    const correlativesResult = await getCorrelative(globalDispatch, d);
+    setDataCorrelatives(correlativesResult); 
     setShowCorrelatives(current => !current);
   };
 
@@ -113,7 +188,6 @@ const StudyPlan = () => {
       buildNotification(result); 
     }
   }
-
   return (
     <React.Fragment>
       <Container className={styles.container}>
@@ -158,8 +232,8 @@ const StudyPlan = () => {
       <ModalCorrelatives 
         show={showCorrelatives}
         handleClose={closeCorrelatives}
-        saveEvent={(e) => saveEventHandler(e)}
-        data={dataSubjectsXStudyPlans || ''}
+        saveEvent={(e) => saveEventCorrelativesHandler(e)}
+        data={{dataRow, dataSubjectsXStudyPlans, dataCorrelatives} || ''}
       />
     </React.Fragment>
   );

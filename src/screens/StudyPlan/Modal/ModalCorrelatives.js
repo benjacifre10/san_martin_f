@@ -18,7 +18,7 @@ const ModalCorrelatives = ({show, handleClose, saveEvent, data}) => {
       <Modal.Body>
         <FormCorrelatives 
           dataEntry={data}
-          saveData={(e) => eventHandler(e)}
+          saveCorrelatives={(e) => eventHandler(e)}
         /> 
       </Modal.Body>
     </Modal>

@@ -1,5 +1,5 @@
 export const GlobalState = {
-  correlatives: {},
+  correlatives: [],
   degrees: [],
   professors: {},
   pursuetypes: {},

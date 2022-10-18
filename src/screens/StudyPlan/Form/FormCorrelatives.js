@@ -13,7 +13,7 @@ import { YearTertiary } from '../../../constant/constant';
 
 import styles from '../StudyPlan.module.css';
 
-const FormCorrelatives = ({ dataEntry, saveData }) => {
+const FormCorrelatives = ({ dataEntry, saveCorrelatives }) => {
 
   const [, globalDispatch] = useGlobal();
   // state of data from database
@@ -37,6 +37,8 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
   const [thirdYearSubjectData, setThirdYearSubjectData] = useState([]);
   // state to set the error or warnings
   const [error, setError] = useState(null);
+  // set initial render
+  const [initial, setInitial] = useState(true);
 
   const showError = (message, type) => {
     message ?
@@ -57,6 +59,34 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
     return; 
   };
 
+  const fillInitialValues = () => {
+    dataEntry.dataSubjectsXStudyPlans.forEach(d => {
+      let subject = {
+        label: d.subject,
+        value: dataSubjects.filter(s => s.name === d.subject).shift().ID
+      };
+      let yearValue;
+      const correlatives = [];
+      dataEntry.dataCorrelatives.forEach(c => {
+        if (c.subjectXStudyPlanId === d.ID) yearValue = c.year; 
+        if (c.correlative && c.subjectXStudyPlanId === d.ID) {
+          c.correlative.forEach(cor => {
+            correlatives.push({
+              label: dataSubjects.filter(s => s.ID === cor).shift().name,
+              value: cor
+            });
+          });
+        }
+      });
+      const year = {
+        label: yearValue,
+        value: yearValue
+      };
+      fillArraySubjects(subject, year, correlatives);
+      blankSelected(subject);
+    });
+  };
+
   useEffect(() => {
     getAllSubjects(globalDispatch);
   }, []);
@@ -74,7 +104,6 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
   };
 
   const popover = (value) => {
-    console.log(value);
     return <Popover id="popover-basic" style={{top:"25%", left:"65%"}}>
       <Popover.Header as="h3">Correlativas</Popover.Header>
       <Popover.Body>
@@ -134,13 +163,37 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
   };
 
   const deleteSubjectHandler = (value) => {
-    console.log(value);
+    setDataSubjects(dataSubjects => [...dataSubjects, {ID: value.subject.value, name: value.subject.label}]);
+    setSelectSubject(null);
+    setSelectYear(null);
+    setSelectCorrelatives(null);
+    const dataF = firstYearSubjectData.filter(f => f.subject.value !== value.subject.value); 
+    setFirstYearSubjectData(dataF);
+    const dataS = secondYearSubjectData.filter(f => f.subject.value !== value.subject.value); 
+    setSecondYearSubjectData(dataS);
+    const dataT = thirdYearSubjectData.filter(f => f.subject.value !== value.subject.value); 
+    setThirdYearSubjectData(dataT);
   };
 
   const sendData = (e) => {
     e.preventDefault();
-    saveData(e); 
+    const finalData = {
+      studyPlanId: dataEntry.dataRow.id || '',
+      correlatives: {
+        firstYearSubjectData,
+        secondYearSubjectData,
+        thirdYearSubjectData
+      }
+    };
+    saveCorrelatives(finalData); 
   };
+
+  useEffect(() => {
+    if (!lodash.isEmpty(dataSubjects) && dataEntry.dataRow && dataEntry.dataSubjectsXStudyPlans && dataEntry.dataCorrelatives && initial) {
+      fillInitialValues();
+      setInitial(false);
+    }
+  }, [dataSubjects]);
 
   useEffect(() => {
     if (!lodash.isEmpty(dataSubjects)) {
@@ -148,7 +201,6 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         <Select
           placeholder="-- Seleccionar --"
           name="subject"
-          defaultValue={ dataEntry.subject && dataEntry.subject.length > 0 ? dataEntry.subject.map(y => ({ label: y, value: y }) ) : "- Seleccionar -" }
           options={dataSubjects ? dataSubjects.map(s => ({ label: s.name, value: s.ID })) : null }
           onChange={onChangeSelectSubjects}
       />);
@@ -157,7 +209,6 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         <Select
           placeholder="-- Seleccionar --"
           name="years"
-          defaultValue={ dataEntry.years && dataEntry.years.length > 0 ? dataEntry.years.map(y => ({ label: y, value: y }) ) : "- Seleccionar -" }
           options={YearTertiary ? YearTertiary.map(y => ({ label: y, value: y })) : null }
           onChange={onChangeSelectYears}
       />);
@@ -179,17 +230,25 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         {firstYearSubjectData.map(f => {
           return <ListGroup.Item key={f.subject.value}>
             { f.subject.label }
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon variant="danger" onClick={() => deleteSubjectHandler('delete')} icon={faTrash} /></Button>
+            <Button className={styles.btn_subject_correlatives}>
+              <FontAwesomeIcon 
+                variant="danger" 
+                onClick={() => deleteSubjectHandler(f)} 
+                icon={faTrash} 
+              />
+            </Button>
             <span style={{float:"right"}}>&nbsp;&nbsp;</span>
             <OverlayTrigger trigger="click" placement="bottom" overlay={popover(f.correlatives)}>
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
-            <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
-            </Button>
+              <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
+                <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
+              </Button>
             </OverlayTrigger>
-            </ListGroup.Item>
+          </ListGroup.Item>
         })} 
         </ListGroup>);
-    } 
+    } else {
+      setFirstYearSubject(null);
+    }
   }, [firstYearSubjectData]);
 
   useEffect(() => {
@@ -198,17 +257,25 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         {secondYearSubjectData.map(f => {
           return <ListGroup.Item key={f.subject.value}>
             { f.subject.label }
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon variant="danger" onClick={() => deleteSubjectHandler('delete')} icon={faTrash} /></Button>
+            <Button className={styles.btn_subject_correlatives}>
+            <FontAwesomeIcon 
+              variant="danger" 
+              onClick={() => deleteSubjectHandler(f)} 
+              icon={faTrash} 
+            />
+            </Button>
             <span style={{float:"right"}}>&nbsp;&nbsp;</span>
             <OverlayTrigger trigger="click" placement="bottom" overlay={popover(f.correlatives)}>
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
-            <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
-            </Button>
+              <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
+                <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
+              </Button>
             </OverlayTrigger>
-            </ListGroup.Item>
+          </ListGroup.Item>
         })} 
         </ListGroup>);
-    } 
+    } else {
+      setSecondYearSubject(null);
+    }
   }, [secondYearSubjectData]);
 
   useEffect(() => {
@@ -217,17 +284,25 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         {thirdYearSubjectData.map(f => {
           return <ListGroup.Item key={f.subject.value}>
             { f.subject.label }
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon variant="danger" onClick={() => deleteSubjectHandler('delete')} icon={faTrash} /></Button>
+            <Button className={styles.btn_subject_correlatives}>
+              <FontAwesomeIcon 
+                variant="danger" 
+                onClick={() => deleteSubjectHandler(f)} 
+                icon={faTrash} 
+              />
+            </Button>
             <span style={{float:"right"}}>&nbsp;&nbsp;</span>
             <OverlayTrigger trigger="click" placement="bottom" overlay={popover(f.correlatives)}>
-            <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
-            <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
-            </Button>
+              <Button className={styles.btn_subject_correlatives}><FontAwesomeIcon icon={faNetworkWired} />
+                <Badge bg="success">{ f.correlatives ? f.correlatives.length : "0" }</Badge>
+              </Button>
             </OverlayTrigger>
-            </ListGroup.Item>
+          </ListGroup.Item>
         })} 
         </ListGroup>);
-    } 
+    } else {
+      setThirdYearSubject(null);
+    }
   }, [thirdYearSubjectData]);
 
   return (
@@ -255,50 +330,46 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
             </Accordion.Body>
           </Accordion.Item>
         </Accordion> 
-    <br/>
-    </React.Fragment>
-<Card>
-          <Card.Header>Agregar Correlatividad</Card.Header>
-          <Card.Body>
-    {
-      lodash.isEmpty(dataSubjects) ?
-      <Row className="justify-content-center">
-      <Spinner animation="border" variant="primary" /> 
-      </Row> :
-      <React.Fragment> 
-      <Form.Group className="mb-3" controlId="formBasicID">
-      <Form.Control type="hidden" disabled name="ID" value={dataEntry ? dataEntry.ID : ''}/>
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicSubject">
-      <Form.Label>Materia</Form.Label>
-      { selectSubject } 
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicYear">
-      <Form.Label>Año</Form.Label>
-      { selectYear }
-      </Form.Group>
-
-      <Form.Group className="mb-3" controlId="formBasicDegree">
-      <Form.Label>Correlativas</Form.Label>
-      { selectCorrelatives } 
-      </Form.Group>
-
-      <br />
-      <Button 
-        variant="primary" 
-        className="w-100"
-        onClick={() => addCorrelatives()}
-      >
-        Agregar Materia    
-      </Button>
-      </React.Fragment>
-    }
-          </Card.Body>
-        </Card>
         <br/>
-    <Form onSubmit={sendData}>
+      </React.Fragment>
+      <Card>
+        <Card.Header>Agregar Correlatividad</Card.Header>
+        <Card.Body>
+        {
+          lodash.isEmpty(dataSubjects) ?
+          <Row className="justify-content-center">
+            <Spinner animation="border" variant="primary" /> 
+          </Row> :
+          <React.Fragment> 
+            <Form.Group className="mb-3" controlId="formBasicSubject">
+              <Form.Label>Materia</Form.Label>
+              { selectSubject } 
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicYear">
+              <Form.Label>Año</Form.Label>
+              { selectYear }
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicDegree">
+              <Form.Label>Correlativas</Form.Label>
+              { selectCorrelatives } 
+            </Form.Group>
+
+            <br />
+            <Button 
+              variant="primary" 
+              className="w-100"
+              onClick={() => addCorrelatives()}
+            >
+              Agregar Materia    
+            </Button>
+          </React.Fragment>
+        }
+        </Card.Body>
+      </Card>
+      <br/>
+      <Form onSubmit={sendData}>
         <Button
           className="w-100"
           variant="primary"
@@ -306,7 +377,7 @@ const FormCorrelatives = ({ dataEntry, saveData }) => {
         >
           Guardar Correlatividades
         </Button>
-    </Form>
+      </Form>
     </React.Fragment>
   )
 }
