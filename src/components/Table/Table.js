@@ -10,7 +10,12 @@ import BodyCol from './BodyCol';
 import styles from './Table.module.css';
 
 
-const Table = ({data, tableEvents, actions}) => {
+const Table = ({
+  data, 
+  tableEvents, 
+  actions,
+  hidden = null
+}) => {
 
   const [header, setHeader] = useState(null);
   const [body, setBody] = useState(null);
@@ -32,11 +37,13 @@ const Table = ({data, tableEvents, actions}) => {
   const loadHeader = () => {
     const values = Object.keys(
       dataTable[0]).map((d, i) => {
-        return <HeaderCol 
-          key={i} 
-          data={lodash.capitalize(d)} 
-          colNumber={i} 
-        />
+        if (!lodash.includes(hidden, d)) {
+          return <HeaderCol 
+            key={i} 
+            data={lodash.capitalize(d)} 
+            colNumber={i} 
+          />
+        } else return null;
       });
     setHeader([values, <HeaderCol 
           key={dataTable.length + 1} 
@@ -49,30 +56,32 @@ const Table = ({data, tableEvents, actions}) => {
     const values = dataTable.map((d, i) => {
       return <Row key={i}>
         {Object.values(d).map((x, j) => {
-          let dataColumn;
-          switch (typeof x) {
-            case "boolean":
-              dataColumn = x ? 'Activo' : 'Inactivo';
-              break;
-            case "string":
-              dataColumn = x;
-              break;
-            case "object":
-              if (Array.isArray(x)) dataColumn = x.join(" ");
-              else {
-                dataColumn = <FontAwesomeIcon onClick={() => tableEvents('search', x)} icon={faPlusCircle}/>
-              }
-              break;
-            default:
-              dataColumn = x;
-              break;
-          }
-          return <BodyCol 
-            key={j} 
-            data={dataColumn}
-            colNumber={j} 
-            actions={actions}
-          />
+          if(!lodash.includes(hidden, Object.keys(d)[j])) {
+            let dataColumn;
+            switch (typeof x) {
+              case "boolean":
+                dataColumn = x ? 'Activo' : 'Inactivo';
+                break;
+              case "string":
+                dataColumn = x;
+                break;
+              case "object":
+                if (Array.isArray(x)) dataColumn = x.join(" ");
+                else {
+                  dataColumn = <FontAwesomeIcon onClick={() => tableEvents('search', x)} icon={faPlusCircle}/>
+                }
+                break;
+              default:
+                dataColumn = x;
+                break;
+            }
+            return <BodyCol 
+              key={j} 
+              data={dataColumn}
+              colNumber={j} 
+              actions={actions}
+            />
+          } else return null;
         })}
         <BodyCol 
           key={Object.values(dataTable[0]).length + 1} 

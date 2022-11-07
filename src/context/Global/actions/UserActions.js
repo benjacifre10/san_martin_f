@@ -30,7 +30,7 @@ export const getUsersByRole = async (dispatch, item) => {
 
   dispatch({
     type: 'GETUSERSBYROLE',
-    payload: result.data.data
+    payload: result.data.data ? result.data.data : []
   });
 
   return result.data.data;

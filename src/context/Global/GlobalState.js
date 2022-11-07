@@ -8,9 +8,10 @@ export const GlobalState = {
   studyplans: {},
   subjects: {},
   subjectsxstudyplan: {},
+  students: {},
   testtypes: {},
   userLogin: {},
-  users: {},
+  users: [],
   loading: false,
   error: false,
   message: ""

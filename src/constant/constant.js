@@ -5,8 +5,8 @@ export const ScreenPermission = {
 };
 
 export const LanguageTitles = {
-  titles: ["Name", "Surname", "Identitynumber", "Active", "Role", "Type", "Email", "Code", "Degree", "State", "Professor", "Shift", "Pursuetype", "Credithours", "Days", "From", "To", "Subjects"],
-  titulos: ["Nombre", "Apellido", "Dni", "Estado", "Rol", "Tipo", "Email", "Codigo", "Carrera", "Estado", "Profesor", "Turno", "Modalidad", "Carga Hs", "Dias", "Desde", "Hasta", "Materias"],
+  titles: ["Name", "Surname", "Identitynumber", "Active", "Role", "Type", "Email", "Code", "Degree", "State", "Professor", "Shift", "Pursuetype", "Credithours", "Days", "From", "To", "Subjects", "Address", "Phone", "Arrears"],
+  titulos: ["Nombre", "Apellido", "Dni", "Estado", "Rol", "Tipo", "Email", "Codigo", "Carrera", "Estado", "Profesor", "Turno", "Modalidad", "Carga Hs", "Dias", "Desde", "Hasta", "Materias", "Domicilio", "Telefono", "Adeuda"],
 };
 
 export const DaysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];
