@@ -58,6 +58,40 @@ const NavigationBar = ({ toggleClick }) => {
                   case "ALUMNO": return (
                     <ul>
                       <li>
+                        <div 
+                          className={styles.toolbar__dropdown_container}
+                          onMouseEnter={() => setIcon(<FontAwesomeIcon icon={faAngleRight} />)}
+                          onMouseLeave={() => setIcon(<FontAwesomeIcon icon={faAngleDown} />)}
+                        >
+                          <span>Inscribir {icon}</span>
+                          <ul>
+                            <li>
+                              <NavLink
+                                className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                                to="/enroll/subject">
+                                Materia
+                              </NavLink>
+                            </li>
+                            <hr />
+                            <li>
+                              <NavLink
+                                className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                                to="/enroll/test">
+                                Examen Parcial
+                              </NavLink>
+                            </li>
+                            <hr />
+                            <li>
+                              <NavLink
+                                className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                                to="/enroll/final">
+                                Examen Final
+                              </NavLink>
+                            </li>
+                          </ul>
+                        </div>
+                      </li>
+                      <li>
                         <NavLink
                           className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                           to="/passwordchange">
@@ -69,6 +103,13 @@ const NavigationBar = ({ toggleClick }) => {
                           className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                           to="/logout">
                           Logout
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                          to="/help">
+                          ?
                         </NavLink>
                       </li>
                     </ul> 
@@ -113,6 +154,13 @@ const NavigationBar = ({ toggleClick }) => {
                       <li>
                         <NavLink
                           className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                          to="/test">
+                          Examenes
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                           to="/passwordchange">
                           Cambiar Password
                         </NavLink>
@@ -122,6 +170,13 @@ const NavigationBar = ({ toggleClick }) => {
                           className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                           to="/logout">
                           Logout
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                          to="/help">
+                          ?
                         </NavLink>
                       </li>
                     </ul>
@@ -189,6 +244,13 @@ const NavigationBar = ({ toggleClick }) => {
                           className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                           to="/logout">
                           Logout
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                          to="/help">
+                          ?
                         </NavLink>
                       </li>
                     </ul>

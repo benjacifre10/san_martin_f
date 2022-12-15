@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col } from 'react-bootstrap';
-import ModalDegree from './Modal/ModalDegree';
+import ModalTest from './Modal/ModalTest';
 import Table from '../../components/Table/Table';
 import Notification from '../../components/Notification/Notification';
 
 import { useGlobal } from '../../context/Global/GlobalProvider';
-import { getDegree, addDegree, changeActiveDegree, updateDegree } from '../../context/Global/actions/DegreeActions';
+import { getProfessor } from '../../context/Global/actions/ProfessorActions';
+import { getTestType } from '../../context/Global/actions/TestTypeActions';
+import { getStudyPlan } from '../../context/Global/actions/StudyPlanActions';
+import { addTest, getTest, deleteTest } from '../../context/Global/actions/TestActions';
 
-import styles from './Degree.module.css';
+import styles from './Test.module.css';
 
-const Degree = () => {
+const Test = () => {
 
   const [globalState, globalDispatch] = useGlobal();
+
   const [show, setShow] = useState(false);
-  const [dataRow, setDataRow] = useState('');
-  const [dataDegrees, setDataDegrees] = useState([]);
   const [error, setError] = useState(null);
+
+  const [tests, setTests] = useState(null);
+  const [professors, setProfessors] = useState(null);
+  const [testtypes, setTesttypes] = useState(null);
+  const [studyplans, setStudyplans] = useState(null);
 
   const showError = (message, type) => {
     message ?
@@ -27,12 +34,6 @@ const Degree = () => {
       />  
     ) :
     setError(null);
-  };
-
-  const getAllDegrees = async () => {
-    const result = await getDegree(globalDispatch);
-    setDataDegrees(result);
-    return; 
   };
 
   const buildNotification = (result) => {
@@ -52,52 +53,50 @@ const Degree = () => {
     }
   };
 
+  const getInitialInfo = async () => {
+    setTests(await getTest(globalDispatch));
+    setProfessors(await getProfessor(globalDispatch));
+    setTesttypes(await getTestType(globalDispatch));
+    setStudyplans(await getStudyPlan(globalDispatch));
+    return;
+  };
+
   useEffect(() => {
-    setDataDegrees(getAllDegrees(globalDispatch));
+    getInitialInfo();
   }, []);
 
   useEffect(() => {
-    setDataDegrees(globalState.degrees);
+    setTests(globalState.test);
   }, [globalState]);
 
+  const addTestEvent = () => {
+    setShow(current => !current);
+  };
+
+  const closeTestEvent = () => {
+    setShow(current => !current);
+  };
+
   const saveEventHandler = async (e) => {
-    const result = e.ID === '' ?
-      await addDegree(globalDispatch, e) :
-      await updateDegree(globalDispatch, e);
-   
+    const result = await addTest(globalDispatch, e);
     buildNotification(result); 
-    setDataDegrees(getAllDegrees(globalDispatch));
-    setShow(current => !current);
-    setDataRow('');
-  };
-
-  const addDegreeEvent = () => {
-    setShow(current => !current);
-  };
-
-  const closeDegreeEvent = () => {
-    setDataRow('');
+    setTests(getTest(globalDispatch));
     setShow(current => !current);
   };
 
   const tableEvents = async (e, d) => { 
-    if (e === 'edit') {
-      setDataRow(d);
-      setShow(current => !current);
-    }
-    if (e === 'check') {
-      d.active = !d.active;
-      const result = await changeActiveDegree(globalDispatch, d);
+    if (e === 'delete') {
+      const result = await deleteTest(globalDispatch, d);
       buildNotification(result); 
     }
-  };
+  }
 
   return (
     <React.Fragment>
       <Container className={styles.container}>
         { error }
         <Row>
-          <h1>Carreras</h1>
+          <h1>Examenes</h1>
         </Row>
         <hr />
         <br />
@@ -107,7 +106,7 @@ const Degree = () => {
                 className="w-100"
                 variant="primary"
                 size="xs"
-                onClick={() => addDegreeEvent()}
+                onClick={() => addTestEvent()}
               >
                 Agregar
               </Button>
@@ -118,23 +117,23 @@ const Degree = () => {
           <Col xs lg="2"></Col>
           <Col>
             <Table
-              key={'degree'}
+              key={'test'}
               tableEvents={(e, d) => tableEvents(e, d)}
-              data={dataDegrees}
-              actions={'ec'}
+              data={tests}
+              actions={'d'}
             /> 
           </Col>
           <Col xs lg="2"></Col>
         </Row>
       </Container>
-      <ModalDegree 
+      <ModalTest 
         show={show}
-        handleClose={closeDegreeEvent}
+        handleClose={closeTestEvent}
         saveEvent={(e) => saveEventHandler(e)}
-        data={dataRow || ''}
+        data={{professors, testtypes, studyplans}}
       />
     </React.Fragment>
-  );
+  ); 
 };
 
-export default Degree;
+export default Test;

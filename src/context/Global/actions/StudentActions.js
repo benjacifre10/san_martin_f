@@ -16,7 +16,7 @@ export const addStudent = async (dispatch, item) => {
       address: item.address,
       phone: item.phone,
       cuil: item.cuil,
-      arrears: true,
+      arrears: false,
       state: true,
       userid: item.user,
       degreeid: item.degree
@@ -78,10 +78,10 @@ export const changeStateStudent = async (dispatch, item) => {
   return result.data;
 };
 
-export const getStudent = async (dispatch) => {
+export const getStudent = async (dispatch, item) => {
   
   const access_token = document.cookie.replace("token=", "");
-  const result = await clientAxios.get('/student', {
+  const result = await clientAxios.get(`/student?useremail=${item}`, {
     headers: {
       'Authorization': `Bearer${access_token}`
     }

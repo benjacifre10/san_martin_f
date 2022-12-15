@@ -27,6 +27,40 @@ const SideBar = ({ show, click }) => {
           case "ALUMNO": return (
             <ul>
               <li>
+                <div 
+                  className={styles.sidebar__dropdown_container}
+                  onMouseEnter={() => setIcon(<FontAwesomeIcon icon={faAngleRight} />)}
+                  onMouseLeave={() => setIcon(<FontAwesomeIcon icon={faAngleDown} />)}
+                >
+                  <span>Inscribir {icon}</span>
+                  <ul>
+                    <li>
+                      <NavLink
+                        className={styles.side_bar__link_submenu}
+                        to="/enroll/subject">
+                        Materia
+                      </NavLink>
+                    </li>
+                    <hr />
+                    <li>
+                      <NavLink
+                        className={styles.side_bar__link_submenu}
+                        to="/enroll/test">
+                        Examen Parcial
+                      </NavLink>
+                    </li>
+                    <hr />
+                    <li>
+                      <NavLink
+                        className={styles.side_bar__link_submenu}
+                        to="/enroll/final">
+                        Examen Final
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
                 <NavLink
                   className={styles.side_bar__link}
                   to="/passwordchange">
@@ -77,6 +111,13 @@ const SideBar = ({ show, click }) => {
                   className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
                   to="/subject">
                   Materias
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                  to="/test">
+                  Examenes
                 </NavLink>
               </li>
               <li>

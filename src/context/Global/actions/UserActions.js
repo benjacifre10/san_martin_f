@@ -18,7 +18,7 @@ export const logout = async (dispatch) => {
   });
 };
 
-export const getUsersByRole = async (dispatch, item) => {
+export const getUsersByRole = async (dispatch) => {
   const access_token = document.cookie.replace("token=", "");
   const options = {
     headers: {

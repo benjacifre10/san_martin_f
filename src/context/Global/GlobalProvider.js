@@ -12,6 +12,8 @@ import StudyPlanReducer from './reducers/StudyPlanReducer';
 import SubjectReducer from './reducers/SubjectReducer';
 import SubjectXStudyPlanReducer from './reducers/SubjectXStudyPlanReducer';
 import StudentReducer from './reducers/StudentReducer';
+import StudentXSubjectXStudyPlanReducer from './reducers/StudentXSubjectXStudyPlanReducer';
+import TestReducer from './reducers/TestReducer';
 import TestTypeReducer from './reducers/TestTypeReducer';
 import UserReducer  from './reducers/UserReducer';
 import { GlobalState } from './GlobalState';
@@ -34,6 +36,8 @@ export const GlobalProvider = ({ children }) => {
     subjects: SubjectReducer,
     subjectsxstudyplan: SubjectXStudyPlanReducer,
     students: StudentReducer,
+    studentxsubjectsxstudyplan: StudentXSubjectXStudyPlanReducer,
+    test: TestReducer,
     testtypes: TestTypeReducer,
     users: UserReducer,
   });

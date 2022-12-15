@@ -9,6 +9,8 @@ export const GlobalState = {
   subjects: {},
   subjectsxstudyplan: {},
   students: {},
+  studentxsubjectsxstudyplan: {},
+  test: [],
   testtypes: {},
   userLogin: {},
   users: [],

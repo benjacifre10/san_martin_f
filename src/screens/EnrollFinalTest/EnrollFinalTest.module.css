@@ -1,0 +1,9 @@
+.container {
+  margin-top: 60px;
+}
+
+.container > div.card {
+  z-index: auto;
+  position: fixed;
+}
+
