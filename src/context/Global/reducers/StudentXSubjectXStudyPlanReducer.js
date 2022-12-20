@@ -9,7 +9,16 @@ export default (state, action) => {
         studentxsubjectsxstudyplan: newStudentXSubjectsXStudyPlan
       };
     case 'UPDATE_STUDENT_X_SUBJECTS_X_STUDY_PLAN':
-      return state;
+      const updatedStudentXSubjectsXStudyPlan = state.studentxsubjectsxstudyplan.map(s => {
+        if (s.ID === action.payload.ID) {
+          s.finalnote = action.payload.finalnote;
+        }
+        return s;
+      });
+      return {
+        ...state,
+        studentxtest: updatedStudentXSubjectsXStudyPlan 
+      };
     case 'DELETE_STUDENT_X_SUBJECTS_X_STUDY_PLAN':
       return state;
     case 'GET_STUDENT_X_SUBJECTS_X_STUDY_PLAN':

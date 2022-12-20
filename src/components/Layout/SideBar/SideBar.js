@@ -114,11 +114,30 @@ const SideBar = ({ show, click }) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink
-                  className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
-                  to="/test">
-                  Examenes
-                </NavLink>
+                <div 
+                  className={styles.toolbar__dropdown_container}
+                  onMouseEnter={() => setIcon(<FontAwesomeIcon icon={faAngleRight} />)}
+                  onMouseLeave={() => setIcon(<FontAwesomeIcon icon={faAngleDown} />)}
+                >
+                  <span>Examenes {icon}</span>
+                  <ul>
+                    <li>
+                      <NavLink
+                        className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                        to="/test">
+                        Inscribir
+                      </NavLink>
+                    </li>
+                    <hr />
+                    <li>
+                      <NavLink
+                        className={({isActive}) => (isActive ? styles.toolbar__link_active : styles.toolbar__link)}
+                        to="/test/note">
+                        Corregir
+                      </NavLink>
+                    </li>
+                  </ul>
+                </div>
               </li>
               <li>
                 <NavLink

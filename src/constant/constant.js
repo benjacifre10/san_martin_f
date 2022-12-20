@@ -1,12 +1,12 @@
 export const ScreenPermission = {
   alumno: ["Main", "PasswordChange", "EnrollSubject", "EnrollTest", "EnrollFinalTest"],
-  administrativo: ["Main", "Students", "PasswordChange", "Degree", "StudyPlan", "Professor", "Subject", "Test"],
+  administrativo: ["Main", "Students", "PasswordChange", "Degree", "StudyPlan", "Professor", "Subject", "Test", "TestNote"],
   administrador: ["Main", "Roles", "Users", "Shift", "TestType", "PursueType", "PasswordBlank"],
 };
 
 export const LanguageTitles = {
-  titles: ["Name", "Surname", "Identitynumber", "Active", "Role", "Type", "Email", "Code", "Degree", "State", "Professor", "Shift", "Pursuetype", "Credithours", "Days", "From", "To", "Subject", "Subjects", "Address", "Phone", "Arrears", "Finalnote", "Approved", "Student", "Form", "Sheet", "Test", "Date"],
-  titulos: ["Nombre", "Apellido", "Dni", "Estado", "Rol", "Tipo", "Email", "Codigo", "Carrera", "Estado", "Profesor", "Turno", "Modalidad", "Carga Hs", "Dias", "Desde", "Hasta", "Materia", "Materias", "Domicilio", "Telefono", "Adeuda", "Nota Final", "Estado", "Alumno", "Formulario", "Hoja", "Examen", "Fecha"],
+  titles: ["Name", "Surname", "Identitynumber", "Active", "Role", "Type", "Email", "Code", "Degree", "State", "Professor", "Shift", "Pursuetype", "Credithours", "Days", "From", "To", "Subject", "Subjects", "Address", "Phone", "Arrears", "Finalnote", "Approved", "Student", "Form", "Sheet", "Test", "Date", "Note"],
+  titulos: ["Nombre", "Apellido", "Dni", "Estado", "Rol", "Tipo", "Email", "Codigo", "Carrera", "Estado", "Profesor", "Turno", "Modalidad", "Carga Hs", "Dias", "Desde", "Hasta", "Materia", "Materias", "Domicilio", "Telefono", "Adeuda", "Nota Final", "Estado", "Alumno", "Formulario", "Hoja", "Examen", "Fecha", "Nota"],
 };
 
 export const DaysOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes"];

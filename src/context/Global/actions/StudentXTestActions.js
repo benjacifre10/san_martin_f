@@ -1,35 +1,36 @@
 import clientAxios from '../../../config/axios';
 
-export const addTest = async (dispatch, item) => {
+export const addStudentTest = async (dispatch, item) => {
   const access_token = document.cookie.replace("token=", "");
   const options = {
     headers: {
       'Authorization': `Bearer${access_token}`
     },
   }
-  const result = await clientAxios.post('/test', 
+  const result = await clientAxios.post('/studentxtest', 
     { 
-      testdate: item.testDate,
-      sheet: item.sheet,
-      form: item.form,
-      subjectstudyplanid: item.subjectXStudyPlanId,
-      professorid: item.professorId,
-      testtypeid: item.testTypeId
+      testid: item.testid,
+      note: item.note,
+      studentsubjectstudyplanid: item.studentsubjectstudyplanid,
     }, options);
   item.ID = result.data.data || '';
 
   dispatch({
-    type: 'ADD_TEST',
+    type: 'ADD_STUDENT_X_TEST',
     payload: item
   });
 
   return result.data;
 };
 
-export const deleteTest = async (dispatch, item) => {
+export const updateStudentTest = async (dispatch, item) => {
 
   const access_token = document.cookie.replace("token=", "");
-  const result = await clientAxios.delete(`/test?id=${item.ID}`, {
+  const result = await clientAxios.put('/studentxtest', 
+  {
+    id: item.ID, note: item.note
+  },
+  {
     headers: {
       'Authorization': `Bearer${access_token}`
     }
@@ -38,27 +39,28 @@ export const deleteTest = async (dispatch, item) => {
   if (result.data.code !== 200) return result.data;
 
   dispatch({
-    type: 'DELETE_TEST',
+    type: 'UPDATE_STUDENT_X_TEST',
     payload: item
   });
 
   return result.data;
 };
 
-export const getTest = async (dispatch) => {
+export const getStudentTest = async (dispatch) => {
   
   const access_token = document.cookie.replace("token=", "");
-  const result = await clientAxios.get('/test', {
+  const result = await clientAxios.get('/studentxtest', {
     headers: {
       'Authorization': `Bearer${access_token}`
     }
   });
   
   dispatch({
-    type: 'GET_TEST',
+    type: 'GET_STUDENT_X_TEST',
     payload: result.data.data || []
   });
 
   return result.data.data;
 };
+
 

@@ -13,8 +13,8 @@ const Main = () => {
   const [globalState, globalDispatch] = useGlobal();
 
   const getStudentInfo = async () => {
-    const student = await getStudent(globalDispatch, user.email);
-    if (student) setStudent(student.shift());
+    const studentResult = await getStudent(globalDispatch, user.email);
+    if (studentResult) setStudent(studentResult[0]);
     return;
   };
 
@@ -38,6 +38,8 @@ const Main = () => {
           <Row>
             <h1>Alumno</h1>
           </Row> 
+          <br/>
+          <br/>
           <Row>
             <Card className={styles.rowCard}>
               <Card.Header>{student.user}</Card.Header>

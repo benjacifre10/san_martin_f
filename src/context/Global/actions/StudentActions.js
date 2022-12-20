@@ -86,7 +86,7 @@ export const getStudent = async (dispatch, item) => {
       'Authorization': `Bearer${access_token}`
     }
   });
-
+  
   dispatch({
     type: 'GET_STUDENT',
     payload: result.data.data ? result.data.data : []

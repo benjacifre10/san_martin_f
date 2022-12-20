@@ -16,6 +16,7 @@ import Shift from './screens/Shift/Shift';
 import StudyPlan from './screens/StudyPlan/StudyPlan';
 import Subject from './screens/Subject/Subject';
 import Test from './screens/Test/Test';
+import TestNote from './screens/TestNote/TestNote';
 import TestType from './screens/TestType/TestType';
 import PursueType from './screens/PursueType/PursueType';
 import PasswordBlank from './screens/PasswordBlank/PasswordBlank';
@@ -40,6 +41,7 @@ const App = () => {
       <Route exact path="/shift" element={<Protected><Shift/></Protected>} />
       <Route exact path="/studyplan" element={<Protected><StudyPlan/></Protected>} />
       <Route exact path="/test" element={<Protected><Test/></Protected>} />
+      <Route exact path="/test/note" element={<Protected><TestNote/></Protected>} />
       <Route exact path="/testtype" element={<Protected><TestType/></Protected>} />
       <Route exact path="/pursuetype" element={<Protected><PursueType/></Protected>} />
       <Route exact path="/passwordblank" element={<Protected><PasswordBlank/></Protected>} />

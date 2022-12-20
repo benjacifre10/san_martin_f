@@ -1,7 +1,7 @@
 import React, { useContext, useReducer } from 'react';
 
 import { GlobalContext } from './GlobalContext';
-import  combineReducers from './reducers';
+import combineReducers from './reducers';
 import CorrelativeReducer from './reducers/CorrelativeReducer';
 import DegreeReducer from './reducers/DegreeReducer';
 import ProfessorReducer from './reducers/ProfessorReducer';
@@ -13,6 +13,7 @@ import SubjectReducer from './reducers/SubjectReducer';
 import SubjectXStudyPlanReducer from './reducers/SubjectXStudyPlanReducer';
 import StudentReducer from './reducers/StudentReducer';
 import StudentXSubjectXStudyPlanReducer from './reducers/StudentXSubjectXStudyPlanReducer';
+import StudentXTestReducer from './reducers/StudentXTestReducer';
 import TestReducer from './reducers/TestReducer';
 import TestTypeReducer from './reducers/TestTypeReducer';
 import UserReducer  from './reducers/UserReducer';
@@ -37,6 +38,7 @@ export const GlobalProvider = ({ children }) => {
     subjectsxstudyplan: SubjectXStudyPlanReducer,
     students: StudentReducer,
     studentxsubjectsxstudyplan: StudentXSubjectXStudyPlanReducer,
+    studentxtest: StudentXTestReducer,
     test: TestReducer,
     testtypes: TestTypeReducer,
     users: UserReducer,

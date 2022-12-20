@@ -69,7 +69,7 @@ export const getTestType = async (dispatch) => {
   
   dispatch({
     type: 'GET_TEST_TYPE',
-    payload: result.data.data
+    payload: result.data.data || []
   });
 
   return result.data.data;

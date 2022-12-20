@@ -41,3 +41,26 @@ export const getStudentXSubjectsXStudyPlan = async (dispatch, item) => {
 
   return result.data.data;
 };
+
+export const updateStudentXSubjectsXStudyPlan = async (dispatch, item) => {
+
+  const access_token = document.cookie.replace("token=", "");
+  const result = await clientAxios.put('/studentxsubjectxplan', 
+  {
+    id: item.ID, finalnote: item.finalnote
+  },
+  {
+    headers: {
+      'Authorization': `Bearer${access_token}`
+    }
+  });
+
+  if (result.data.code !== 200) return result.data;
+
+  dispatch({
+    type: 'UPDATE_STUDENT_X_SUBJECTS_X_STUDY_PLAN',
+    payload: item
+  });
+
+  return result.data;
+};

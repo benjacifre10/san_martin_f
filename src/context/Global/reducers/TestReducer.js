@@ -3,7 +3,6 @@ export default (state, action) => {
     case 'ADD_TEST':
       const test = action.payload;
       const newTest = state.test;
-      console.log('reducer test', newTest, test);
       newTest.push(test);
       return {
         ...state,

@@ -10,6 +10,7 @@ export const GlobalState = {
   subjectsxstudyplan: {},
   students: {},
   studentxsubjectsxstudyplan: {},
+  studentxtest: [],
   test: [],
   testtypes: {},
   userLogin: {},
