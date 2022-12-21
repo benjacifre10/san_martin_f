@@ -44,7 +44,7 @@ const FormEnrollSubject = ({ dataEntry, saveData }) => {
   return (
     <Form onSubmit={sendData}>
       <Form.Group className="mb-3" controlId="formBasicSubject">
-        <Form.Label>Carrera</Form.Label>
+        <Form.Label>Materia</Form.Label>
         { select }    
       </Form.Group>
       <br />
